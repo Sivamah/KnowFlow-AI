@@ -1,0 +1,35 @@
+# ── Python ───────────────────────────────────
+__pycache__/
+*.py[cod]
+*.so
+
+# ── Environment / Secrets ─────────────────────
+.env
+
+# ── Virtual environments ──────────────────────
+.venv/
+venv/
+env/
+ENV/
+
+# ── ChromaDB vector store ─────────────────────
+chroma_db/
+eval_data/chroma_eval/
+
+# ── Uploaded data files / auto-generated text ─
+data/
+text_input_*.txt
+.pytest_cache/
+
+# ── IDE / Editor ──────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ── OS files ──────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Logs ─────────────────────────────────────
+*.log
+logs/

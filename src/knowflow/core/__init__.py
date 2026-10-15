@@ -1,0 +1,29 @@
+"""
+KnowFlow Core Engine Package
+"""
+
+from src.knowflow.core.config import (
+    PROJECT_ROOT,
+    DATA_DIR,
+    CHROMA_PERSIST_DIR,
+    CHROMA_COLLECTION_NAME,
+    EMBEDDING_MODEL_NAME,
+    DEFAULT_CHUNK_SIZE,
+    DEFAULT_CHUNK_OVERLAP,
+    DEFAULT_TOP_K,
+    DEFAULT_FETCH_K,
+    DEFAULT_LAMBDA_MMR
+)
+
+__all__ = [
+    "PROJECT_ROOT",
+    "DATA_DIR",
+    "CHROMA_PERSIST_DIR",
+    "CHROMA_COLLECTION_NAME",
+    "EMBEDDING_MODEL_NAME",
+    "DEFAULT_CHUNK_SIZE",
+    "DEFAULT_CHUNK_OVERLAP",
+    "DEFAULT_TOP_K",
+    "DEFAULT_FETCH_K",
+    "DEFAULT_LAMBDA_MMR",
+]

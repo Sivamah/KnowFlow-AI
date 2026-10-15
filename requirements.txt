@@ -1,0 +1,30 @@
+# ── Streamlit Frontend ─────────────────────
+streamlit
+
+# ── LangChain (optional utilities) ─────────
+langchain
+langchain-community
+langchain-huggingface
+
+# ── Vector Store ────────────────────────────
+chromadb
+
+# ── Embeddings ──────────────────────────────
+sentence-transformers
+
+# ── LLM via Groq ────────────────────────────
+groq
+
+# ── Document Loaders ────────────────────────
+PyPDF2
+python-docx
+
+# ── ngrok tunnel (for Colab deployment) ─────
+pyngrok
+
+# ── Utilities ───────────────────────────────
+python-dotenv
+numpy
+
+# ── Testing & Evaluation ────────────────────
+pytest

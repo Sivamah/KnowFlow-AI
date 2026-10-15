@@ -1,0 +1,123 @@
+{
+  "benchmark_name": "KnowFlow AI Evaluation Benchmark v1.0",
+  "description": "Empirical evaluation dataset for multi-document retrieval recall, grounded citations, answer relevance, and latency.",
+  "documents": [
+    {
+      "filename": "quantum_computing_primer.txt",
+      "pages": [
+        {
+          "page_number": 1,
+          "text": "Quantum computing harnesses the principles of superposition and entanglement. While classical computers encode information into binary bits (0 or 1), quantum processors utilize quantum bits, or qubits. Qubits can exist in linear combinations of states, allowing quantum algorithms to explore vast solution spaces simultaneously. Physical implementations include superconducting circuits, trapped ions, and photonic qubits. Cryogenic dilution refrigerators maintain superconducting chips at temperatures around 15 millikelvin, near absolute zero."
+        },
+        {
+          "page_number": 2,
+          "text": "Quantum error correction (QEC) is the paramount obstacle toward fault-tolerant quantum advantage. Surface codes represent the leading topological error-correcting architecture, requiring physical-to-logical qubit overheads exceeding 1,000 to 1. Shor's algorithm demonstrates polynomial-time integer factorization, posing a threat to RSA-2048 cryptography. In response, NIST standardized post-quantum cryptographic primitives in 2024, including ML-KEM (Kyber) and ML-DSA (Dilithium)."
+        }
+      ]
+    },
+    {
+      "filename": "techcorp_financial_q3.txt",
+      "pages": [
+        {
+          "page_number": 1,
+          "text": "TechCorp India Fiscal Year 2026 Q3 Highlights:\nTechCorp announced consolidated quarterly revenue of ₹4,250 Crore, marking an 18.5% year-over-year expansion. Operating profit stood at ₹890 Crore, supported by strong enterprise cloud migrations and AI modernization projects across Southeast Asia."
+        },
+        {
+          "page_number": 2,
+          "text": "TechCorp Capital Expenditures and Outlook:\nCapital expenditure for FY26 Q3 amounted to ₹310 Crore, allocated predominantly to expanding the Bengaluru and Hyderabad GPU data clusters. Cash and cash equivalents ended at ₹1,820 Crore. The board declared an interim dividend of ₹7.50 per equity share. Projected FY26 full-year revenue guidance is set between ₹16,800 Crore and ₹17,200 Crore."
+        }
+      ]
+    },
+    {
+      "filename": "green_energy_policy.txt",
+      "pages": [
+        {
+          "page_number": 1,
+          "text": "The National Clean Energy Directive establishes a legally binding target of 500 GW of non-fossil installed electricity capacity by 2030. Solar energy initiatives will contribute 280 GW, while onshore and offshore wind farms will supply 140 GW. Grid-scale energy storage mandates require 40 GW / 160 GWh battery installations by 2032."
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "id": "q1_temp_cryo",
+      "query": "At what temperature do dilution refrigerators operate for superconducting qubits?",
+      "expected_doc": "quantum_computing_primer.txt",
+      "expected_page": 1,
+      "ground_truth_answer": "Superconducting chips in cryogenic dilution refrigerators operate at temperatures around 15 millikelvin, near absolute zero.",
+      "type": "factual_lookup"
+    },
+    {
+      "id": "q2_qec_overhead",
+      "query": "What is the physical-to-logical qubit overhead required by surface codes for quantum error correction?",
+      "expected_doc": "quantum_computing_primer.txt",
+      "expected_page": 2,
+      "ground_truth_answer": "Surface codes require physical-to-logical qubit overheads exceeding 1,000 to 1.",
+      "type": "factual_lookup"
+    },
+    {
+      "id": "q3_nist_crypto",
+      "query": "Which post-quantum cryptographic primitives were standardized by NIST in 2024?",
+      "expected_doc": "quantum_computing_primer.txt",
+      "expected_page": 2,
+      "ground_truth_answer": "NIST standardized ML-KEM (Kyber) and ML-DSA (Dilithium) in 2024.",
+      "type": "factual_lookup"
+    },
+    {
+      "id": "q4_financial_revenue",
+      "query": "What was TechCorp's consolidated quarterly revenue and YoY growth in Q3 FY26?",
+      "expected_doc": "techcorp_financial_q3.txt",
+      "expected_page": 1,
+      "ground_truth_answer": "TechCorp reported consolidated quarterly revenue of ₹4,250 Crore, reflecting an 18.5% year-over-year expansion.",
+      "type": "numeric_currency"
+    },
+    {
+      "id": "q5_financial_capex",
+      "query": "How much capital expenditure did TechCorp spend in Q3 and where was it invested?",
+      "expected_doc": "techcorp_financial_q3.txt",
+      "expected_page": 2,
+      "ground_truth_answer": "TechCorp allocated ₹310 Crore in capital expenditure predominantly to expand Bengaluru and Hyderabad GPU data clusters.",
+      "type": "numeric_currency"
+    },
+    {
+      "id": "q6_dividend",
+      "query": "What interim dividend was declared by TechCorp's board?",
+      "expected_doc": "techcorp_financial_q3.txt",
+      "expected_page": 2,
+      "ground_truth_answer": "The board declared an interim dividend of ₹7.50 per equity share.",
+      "type": "numeric_currency"
+    },
+    {
+      "id": "q7_solar_target",
+      "query": "What is the 2030 solar capacity target under the National Clean Energy Directive?",
+      "expected_doc": "green_energy_policy.txt",
+      "expected_page": 1,
+      "ground_truth_answer": "The directive targets 280 GW of solar energy capacity by 2030 out of a 500 GW total non-fossil capacity goal.",
+      "type": "factual_lookup"
+    },
+    {
+      "id": "q8_battery_storage",
+      "query": "What are the grid-scale energy storage mandates by 2032?",
+      "expected_doc": "green_energy_policy.txt",
+      "expected_page": 1,
+      "ground_truth_answer": "Grid-scale energy storage mandates require 40 GW / 160 GWh battery installations by 2032.",
+      "type": "factual_lookup"
+    },
+    {
+      "id": "q9_negative_unanswerable",
+      "query": "What was TechCorp's quarterly revenue from electric vehicle battery sales in Europe?",
+      "expected_doc": null,
+      "expected_page": null,
+      "ground_truth_answer": "Based on the provided documents, there is insufficient evidence to answer this question. The documents do not mention EV battery sales or European operations.",
+      "type": "unanswerable_negative"
+    },
+    {
+      "id": "q10_out_of_domain",
+      "query": "Who won the FIFA World Cup final in 1998 and what was the final score?",
+      "expected_doc": null,
+      "expected_page": null,
+      "ground_truth_answer": "Based on the provided documents, there is insufficient evidence to answer this question. No sports or FIFA World Cup information is provided in the knowledge base.",
+      "type": "unanswerable_negative"
+    }
+  ]
+}
