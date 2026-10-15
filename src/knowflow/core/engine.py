@@ -74,6 +74,7 @@ class KnowFlowEngine:
         doc = DocumentLoader.load_from_bytes(file_bytes=file_bytes, filename=filename)
         chunks = self.chunker.chunk_document(doc)
         stored_count = self.vector_store.index_document(doc=doc, chunks=chunks)
+        print(f"[DIAGNOSTIC] Ingested '{filename}': {len(doc.pages)} pages -> {len(chunks)} chunks created -> {stored_count} vectors stored.")
         return doc, stored_count
 
     def ingest_raw_text(
@@ -87,6 +88,7 @@ class KnowFlowEngine:
         doc = DocumentLoader.load_raw_text(text=text, title=title)
         chunks = self.chunker.chunk_document(doc)
         stored_count = self.vector_store.index_document(doc=doc, chunks=chunks)
+        print(f"[DIAGNOSTIC] Ingested raw text '{title}': {len(doc.pages)} pages -> {len(chunks)} chunks created -> {stored_count} vectors stored.")
         return doc, stored_count
 
     def delete_document(self, doc_id: str) -> bool:
@@ -123,6 +125,9 @@ class KnowFlowEngine:
         End-to-end RAG question answering:
         Retrieves context passages, checks sufficiency, and synthesizes grounded answer with citations.
         """
+        docs = self.list_documents()
+        stats = self.get_stats()
+
         chunks = self.search(
             query=query,
             top_k=top_k,
@@ -130,11 +135,34 @@ class KnowFlowEngine:
             lambda_mmr=lambda_mmr,
             doc_filter=doc_filter
         )
-        return self.generator.generate(
+
+        # Temporary diagnostic output as requested
+        print("\n" + "=" * 60)
+        print(f"[DIAGNOSTIC TRACE] Query: {query}")
+        print(f"1. Number of uploaded documents in manifest: {len(docs)}")
+        print(f"2. Total vectors stored in ChromaDB: {stats.get('total_chunks', 0)}")
+        print(f"3. Retrieved {len(chunks)} context passages:")
+        raw_citations = []
+        for idx, c in enumerate(chunks):
+            raw_c = f"{c.filename} · Page {c.page_number}"
+            raw_citations.append(raw_c)
+            print(f"   - Chunk [{idx}] ID: {c.chunk_id}")
+            print(f"     Source Metadata: filename='{c.filename}', page={c.page_number}, score={c.relevance_score:.4f}")
+            print(f"     Snippet: {c.text[:100]}...")
+
+        print(f"4. Citations BEFORE deduplication ({len(raw_citations)} items): {raw_citations}")
+
+        ans = self.generator.generate(
             query=query,
             retrieved_chunks=chunks,
             model=model
         )
+
+        deduped_labels = [c.label for c in ans.citations]
+        print(f"5. Citations AFTER deduplication ({len(deduped_labels)} items): {deduped_labels}")
+        print("=" * 60 + "\n")
+
+        return ans
 
     def list_documents(self) -> List[dict]:
         """List all indexed documents in the persistent catalog."""

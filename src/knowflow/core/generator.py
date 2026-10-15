@@ -59,6 +59,15 @@ class GeneratedAnswer:
     supporting_passages: List[RetrievedChunk] = field(default_factory=list)
 
 
+def deduplicate_inline_citations(text: str) -> str:
+    """
+    Deduplicate consecutive identical inline citations in LLM answer text.
+    For example: '[Doc: notes.txt, Page: 1] [Doc: notes.txt, Page: 1]' -> '[Doc: notes.txt, Page: 1]'.
+    """
+    pattern = r'(\[Doc:\s*[^,\n\]]+,\s*Page:\s*[^\]\n]+\])(?:\s*[,;]?\s*\1)+'
+    return re.sub(pattern, r'\1', text)
+
+
 class AnswerGenerator:
     """
     Coordinates prompt construction, Groq LLM inference, grounded citation checking,
@@ -143,7 +152,7 @@ class AnswerGenerator:
             "Your objective is to provide high-precision, factual answers based STRICTLY on the provided context passages.\n\n"
             "Mandatory Rules:\n"
             "1. Answer using ONLY the information stated in the context passages.\n"
-            "2. For every factual claim, stat, or statement, attach an inline citation in the form: [Doc: <filename>, Page: <page>].\n"
+            "2. Attach an inline citation in the form: [Doc: <filename>, Page: <page>] to substantiate factual statements. Do not repeat identical citations consecutively or multiple times for claims supported by the same document and page.\n"
             "3. Do not invent page numbers, filenames, or external facts under any circumstances.\n"
             "4. If the context does not contain adequate evidence to answer the question, state: "
             "'Based on the provided documents, there is insufficient evidence to answer this question.' "
@@ -168,6 +177,7 @@ class AnswerGenerator:
                 max_tokens=MAX_GENERATION_TOKENS
             )
             raw_answer = response.choices[0].message.content.strip()
+            raw_answer = deduplicate_inline_citations(raw_answer)
         except Exception as e:
             logger.error(f"Groq generation error: {e}")
             return GeneratedAnswer(

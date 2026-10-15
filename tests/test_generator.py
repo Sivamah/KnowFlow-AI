@@ -192,3 +192,32 @@ def test_citation_handles_missing_page_and_missing_filename_safely():
     assert len(result.citations) == 1
     assert result.citations[0].label == "readme.txt"
     assert result.citations[0].relevance_score == 0.75
+
+
+def test_deduplicate_inline_citations():
+    """Verify consecutive duplicate inline citations are collapsed to a single citation."""
+    from src.knowflow.core.generator import deduplicate_inline_citations
+
+    # 4 consecutive duplicate inline citations
+    raw = (
+        "The training programme costs ₹15,000 per employee. "
+        "[Doc: notes_20261015_110343.txt, Page: 1] "
+        "[Doc: notes_20261015_110343.txt, Page: 1] "
+        "[Doc: notes_20261015_110343.txt, Page: 1] "
+        "[Doc: notes_20261015_110343.txt, Page: 1]"
+    )
+    cleaned = deduplicate_inline_citations(raw)
+    assert cleaned == "The training programme costs ₹15,000 per employee. [Doc: notes_20261015_110343.txt, Page: 1]"
+
+    # Comma-separated consecutive duplicate inline citations
+    raw_comma = (
+        "The policy handbook outlines requirements "
+        "[Doc: handbook.pdf, Page: 3], [Doc: handbook.pdf, Page: 3]"
+    )
+    cleaned_comma = deduplicate_inline_citations(raw_comma)
+    assert cleaned_comma == "The policy handbook outlines requirements [Doc: handbook.pdf, Page: 3]"
+
+    # Distinct citations are preserved
+    distinct = "[Doc: doc_a.txt, Page: 1] and [Doc: doc_b.txt, Page: 2]"
+    assert deduplicate_inline_citations(distinct) == distinct
+
